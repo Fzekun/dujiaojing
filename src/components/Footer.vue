@@ -4,15 +4,15 @@
             <i class="home icon-home"></i>
             <p>首页</p>
         </a>
-        <a href="">
+        <a href="classify.html">
           <i class="classify"></i>
           <p>分类</p>
         </a>
-        <a href="">
+        <a href="findGoods.html">
             <i class="discover"></i>
             <p class="discover-text">发现好货</p>
         </a>
-        <a href="my.html">
+        <a href="purchaseOrder.html">
           <i class="purchase"></i>
           <p>采购单</p>
         </a>
@@ -20,12 +20,21 @@
           <i class="my"></i>
           <p>我的</p>
         </a>
-      </ul>
   </footer>
 </template>
 
 <script>
 export default {
+  data(){
+      return {
+        index : 0,
+        footers : [
+            {
+                text : ''
+            }
+        ]
+      }
+  },
   props: ['footerIndex'],
   mounted: function () {
     this.$nextTick(function () {

@@ -55,7 +55,7 @@
       <!-- 常用采购 start -->
       <div class="like-wrap">
           <header>
-                <h2>新品推荐</h2>
+                <h2>常用采购</h2>
                 <i class="icon more"></i>
           </header>
           <section class="scroll">
@@ -85,23 +85,30 @@
        <header>
           <h2>为您推荐</h2>
        </header>
-       <section class="recommend-list">
-          <ul>
-              <li v-for="item in 4">
-                <a href="">
-                  <div class="img-wrap">
-                    <img src="../../assets/images/commodity.jpg" alt="">
-                  </div>
-                  <div class="text-wrap">
-                      <p>兴客坊小小玉汤圆</p>
-                      <p class="rule">2.5kg   1件起批</p>
-                      <p class="price">￥92.00</p>
-                  </div>
-                </a>
-              </li>
-              <li></li>
-          </ul>
-       </section>
+      <mt-loadmore :bottom-distance="50" @bottom-status-change="handleBottomChange" ref="loadmore"  :bottom-method="loadBottom"  :bottom-all-loaded="allLoaded">
+         <div class="recommend-list">
+             <ul>
+               <li v-for="item in items">
+                 <a href="">
+                   <div class="img-wrap">
+                     <img src="../../assets/images/commodity.jpg" alt="">
+                   </div>
+                   <div class="text-wrap">
+                     <p>{{ item.name }}</p>
+                     <p class="rule">{{ item.text }}</p>
+                     <p class="price">￥{{item.price}}</p>
+                   </div>
+                 </a>
+               </li>
+               <li></li>
+             </ul>
+         </div>
+        <div slot="bottom" class="loadmore-bottom">
+          <!--<span>{{ bottomStatus }}</span>-->
+          <p v-show="bottomStatus !== 'loading'">{{statusText}}</p>
+          <p class="bottom-loading" v-show="bottomStatus === 'loading'" :class="{ loading : bottomStatus === 'loading' }"></p>
+        </div>
+        </mt-loadmore>
     </div>
     <!--推荐 end -->
     <common-footer footerIndex="0"></common-footer>
@@ -117,6 +124,22 @@ import CommonFooter from '../../components/Footer.vue'
 export default {
     data () {
         return {
+            allLoaded : false,
+            bottomStatus : 'pull',
+            statusText : '上拉加载更多',
+            items : [
+              {
+                  name : '兴客坊小小玉汤圆',
+                  price : '92.00',
+                  text : '小汤圆'
+              },
+              {
+                name : '兴客坊小小玉汤圆',
+                price : '92.00',
+                text : '小汤圆'
+              },
+            ],
+
             imgUrl : [
               {src: 'https://m.360buyimg.com/mobilecms/s220x220_jfs/t4369/155/128227152/185232/5850cae7/58afd6d7N9a85cd2a.jpg!q70.jpg'},
               {src: 'https://m.360buyimg.com/mobilecms/s220x220_jfs/t4522/123/1287527911/687997/74114c3/58dc7d90Nb4e829ee.jpg!q70.jpg'},
@@ -141,7 +164,8 @@ export default {
             swiperOption: {
                 swiperSlides: 0,
                 //autoplay: 5000,
-                //autoplayDisableOnInteraction: false,
+                //loop : true,
+                autoplayDisableOnInteraction: true,
                 //notNextTick: true,
                 observer:true,//修改swiper自己或子元素时，自动初始化swiper
                 observeParents:true,
@@ -178,6 +202,7 @@ export default {
                 searchBox.classList.remove('active');
             }
             searchBox.style.background='rgba(255,255,255,'+opcaity+')';
+
         },false);
     },
     computed : {
@@ -192,16 +217,49 @@ export default {
         swiperSlide,
         'common-footer': CommonFooter
     },
-    method : {
-
+    methods : {
+      loadBottom(id){
+        this.statusText = 'loading...';
+        this.bottomStatus = 'loading';
+        setTimeout(()=>{
+          this.items.push({
+            name: 1,
+            price: 1,
+            text: 1
+          })
+          this.bottomStatus = 'pull';
+          this.$refs.loadmore.onBottomLoaded(id);
+        },2000)
+      },
+      handleBottomChange(status){
+          if( status == 'drop' ){
+             this.statusText = '释放刷新';
+          }
+          if( status == 'pull' ){
+            this.statusText = '上拉加载更多';
+          }
+      }
     }
 }
 </script>
 
 <style rel="stylesheet/scss" lang="scss" spoend>
 @import '../../assets/scss/common.scss';
+@import "../../assets/scss/iscroll.scss";
 $radius : px2rem(25);
 /* 常用采购 为您推荐 头部通用样式 */
+.loadmore-bottom{
+    width: 100%;
+    @extend .text_center;
+}
+.bottom-loading{
+    width: 100%;
+    height: px2rem(124);
+}
+.bottom-loading.loading{
+    background: url("../../assets/images/icon/loading_gray.gif") no-repeat center;
+    background-size: px2rem(128) auto;
+}
 @mixin header{
   border-radius: $radius $radius 0 0;
   height:px2rem(80);
@@ -213,6 +271,7 @@ $radius : px2rem(25);
     @extend .text_center;
     font-size:px2rem(28);
     line-height:px2rem(80);
+    font-weight:bold;
     color:$color_0086d1;
   }
   i{
@@ -255,6 +314,7 @@ $radius : px2rem(25);
     color:$color_999999;
   }
 }
+
 .search-box{
    width:100%;
    height:px2rem(80);
@@ -388,7 +448,7 @@ $radius : px2rem(25);
         float:left;
         margin:0 px2rem(14) 0 0;
         border-radius:50%;
-        background-color:$color_c7effb;
+        //background-color:$color_c7effb;
     }
     span.active{
         background-color:$color_018bd6;
@@ -458,6 +518,7 @@ $radius : px2rem(25);
   padding:0 0 px2rem(170) 0;
   & > header{
     @include header;
+    position: relative;
   }
   .recommend-list{
       background:$color_efeff4;
@@ -504,7 +565,7 @@ $radius : px2rem(25);
 /*img lazyload style*/
 .img_lazyload{
   &[lazy=loading]{
-    background:url(../../assets/images/icon/loading.gif) scroll no-repeat center center;
+    background:url(../../assets/images/icon/lazy_load_loading.png) scroll no-repeat center center;
     background-size: px2rem(124) auto;
   }
   &[lazy=error]{
