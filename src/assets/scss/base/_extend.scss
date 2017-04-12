@@ -1,0 +1,45 @@
+.fixed{
+  position: fixed;
+  left: 0;
+  width: 100%;
+}
+.relative{
+  position: relative;
+}
+.bg_white{
+  background: $white;
+}
+.block{
+  display: block;
+}
+.none{
+  display: none;
+}
+.inline_block{
+  display: inline-block;
+}
+.float_left{
+  float:left;
+}
+.float_right{
+  float:right;
+}
+.text_center{
+  text-align: center;
+}
+.text_right{
+  text-align: right;
+}
+.absolute{
+  position: absolute;
+}
+.flex{
+  display: flex;
+  .flex_item{
+    flex:1 0 auto;
+  }
+}
+.background_auto{
+  background-size:100% auto;
+}
+

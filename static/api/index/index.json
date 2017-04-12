@@ -1,0 +1,16 @@
+{
+  "banner_list": [
+    {
+      "image": "../static/api/index/1.jpg"
+    },
+    {
+      "image": "../static/api/index/2.jpg"
+    },
+    {
+      "image": "../static/api/index/3.jpg"
+    },
+    {
+      "image": "../static/api/index/4.jpg"
+    }
+  ]
+}

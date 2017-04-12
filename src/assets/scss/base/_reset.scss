@@ -1,0 +1,52 @@
+html {
+  -ms-text-size-adjust: 100%; // 1
+  -webkit-text-size-adjust: 100%; // 1
+  -webkit-tap-highlight-color: transparent; // 2
+  height: 100%;
+}
+body,div,h1,h2,h3,h4,ul,li,p{
+  margin:0;
+  padding:0;
+}
+h1,h2,h3,h4,h5,h6
+{
+  font-size:100%;
+  font-weight: normal;
+}
+i{
+    font-style: normal;
+}
+body{
+  font-family:'Microsoft YaHei',Arial,sans-serif;
+  color:$color_333333;
+  background-color:$color_efeff4;
+}
+li{
+  list-style: none;
+}
+a{
+  text-decoration: none;
+}
+img {
+  border: 0; // 1
+}
+input,
+select,
+textarea,
+button {
+  outline: 0;
+  font-size:100%;
+  border:0;
+  padding:0;
+  background:none;
+}
+input[type="password"],input[type="text"],input[type="button"],input[type="submit"],input[type="reset"],input[type="file"]::-webkit-file-upload-button,button,select,textarea{
+  -webkit-appearance:none;
+  appearance:none;
+  border-radius: 0;
+}
+// Android 下 input focus 消除高亮外框
+textarea,
+input {
+  -webkit-user-modify: read-write-plaintext-only;
+}

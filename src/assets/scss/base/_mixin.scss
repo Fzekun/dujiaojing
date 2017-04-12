@@ -1,0 +1,22 @@
+/*多行文字省略号*/
+@mixin overflow_omit() {
+  white-space:nowrap;
+  text-overflow:ellipsis;
+  -o-text-overflow:ellipsis;
+  overflow:hidden;
+}
+/*background-size rem数值转换*/
+@mixin bg_size_rem($x:auto,$y:auto) {
+  @if $x==auto{
+    $x:auto;
+  } @else {
+    $x:px2rem($x);
+  }
+  @if $y==auto{
+    $y:auto;
+  } @else {
+    $y:px2rem($y);
+  }
+  background-size: ($x, $y);
+}
+
