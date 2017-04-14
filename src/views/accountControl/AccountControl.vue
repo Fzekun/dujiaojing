@@ -47,7 +47,7 @@
           </a>
       </div>
       <div class="btn-wrap">
-        <a href="" class="btn-login_out">登录</a>
+        <a href="" class="btn-login_out">退出</a>
       </div>
       <common-footer footerIndex="4"></common-footer>
   </div>
@@ -57,11 +57,9 @@
   export default{
     data(){
       return {
-
       }
     },
     mounted(){
-
     },
     components : {
       CommonFooter
@@ -110,7 +108,6 @@
                   }
               }
           }
-
       }
   }
   .division{

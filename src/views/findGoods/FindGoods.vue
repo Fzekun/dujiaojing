@@ -7,7 +7,7 @@
 <script>
 import CommonFooter from '../../components/Footer.vue'
 import { ViewBox } from 'vux'
-//import {mapGetters} from 'vuex'
+import {mapGetters} from 'vuex'
 //import store from '../../vuex/store'
 export default {
     data () {
@@ -16,14 +16,14 @@ export default {
         }
     },
     mounted : function(){
-
     },
     computed : {
-
+      ...mapGetters({
+        orderTotal : 'orderTotal'
+      })
     },
-
     components: {
-        'common-footer': CommonFooter
+        CommonFooter
     },
     method : {
 

@@ -82,9 +82,9 @@
     padding : px2rem(58) 0 0 0;
     p{
       @extend .inline_block;
-      a:first-child{
-        margin: 0 px2rem(50) 0 0;
-      }
+      /*a:first-child{*/
+        /*margin: 0 px2rem(50) 0 0;*/
+      /*}*/
     }
   }
   .order-box{

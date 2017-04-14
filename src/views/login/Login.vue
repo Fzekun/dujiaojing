@@ -1,228 +1,43 @@
 <template>
     <div>
         <nav class="nav">
-            <v-touch tag="a" :class="{ active : phoneActive }" v-on:tap="showPhonePanel">手机登录</v-touch>
-            <v-touch tag="a" :class="{ active : passwordActive }" v-on:tap="showPassWordPanel">密码密码</v-touch>
+            <v-touch :key="nav.id" v-for="(nav,index) in navs" tag="a" :class="{ active : index == navIndex }" v-on:tap="togglePanel(nav,index)">{{ nav.text }}</v-touch>
+            <!--<v-touch tag="a" :class="{ active : passwordActive }" v-on:tap="showPassWordPanel">密码登录</v-touch>-->
         </nav>
-        <div v-show="phonePanel" class="phone-login">
-
-            <div class="form-group">
-              <div class="wrap">
-                <i class="icon-phone"></i>
-                <div class="input-wrap">
-                  <input v-model.trim="phoneForm.phone" maxlength="11" placeholder="手机号" class="input phone" type="tel" />
-                  <v-touch v-show="phoneFormClear.phone" tag="span" class="icon-clear" v-on:tap="clearPhoneFormPhone"></v-touch>
-                </div>
-              </div>
-            </div>
-            <div class="form-group">
-              <div class="wrap">
-                <i class="icon-verify"></i>
-                <div class="input-wrap">
-                  <input v-model="phoneForm.verifyCode" placeholder="请输入校验码" maxlength="4" class="input phone" type="tel" />
-                  <v-touch v-show="phoneFormClear.verifyCode" tag="span" class="icon-clear" v-on:tap="clearPhoneFormVerifyCode"></v-touch>
-                </div>
-                <div class="img-wrap">
-                  <img class="verification-code" src="../../assets/images/img-verificationcode.jpg" alt="">
-                </div>
-              </div>
-            </div>
-            <div class="form-group">
-              <div class="wrap">
-                <i class="icon-smscode"></i>
-                <div class="input-wrap">
-                  <input v-model="phoneForm.smsCode" placeholder="请输入短信验证码" maxlength="6" class="input phone" type="tel" />
-                  <v-touch v-show="phoneFormClear.smsCode" tag="span" class="icon-clear" v-on:tap="clearPhoneFormSMScode"></v-touch>
-                </div>
-                <a href="javascript:;" class="btn-getcode">获取验证码</a>
-                <a href="javascript:;" class="btn-getcode gray">获取验证码</a>
-              </div>
-            </div>
-            <div class="submit-wrap">
-              <a v-show="phoneGraySubmit" href="javascript:;" class="btn-submit">登录</a>
-              <v-touch v-show="phoneHighlightSubmit" tag="a" class="btn-submit on" v-on:tap="phoneFormSubmit">登录</v-touch>
-              <p>
-                  <a href="" class="float_right">快速注册</a>
-              </p>
-            </div>
-        </div>
-        <div v-show="passwordPanel" class="password-login">
-          <div class="form-group">
-            <div class="wrap">
-              <i class="icon-phone"></i>
-              <div class="input-wrap">
-                <input v-model="passwordForm.phone" maxlength="11" placeholder="手机号" class="input phone" type="tel" />
-                <v-touch v-show="passwordFormClear.phone" tag="span" class="icon-clear" v-on:tap="clearPasswordFormPhone"></v-touch>
-              </div>
-            </div>
-          </div>
-            <div class="form-group">
-              <div class="wrap">
-                <i class="icon-password"></i>
-                <div class="input-wrap">
-                  <input ref="password" v-model="passwordForm.password" maxlength="20" placeholder="请输入密码" class="input phone" type="password" />
-                  <v-touch v-show="passwordFormClear.password" tag="span" class="icon-clear" v-on:tap="clearPasswordFormPassword"></v-touch>
-                </div>
-                <v-touch v-show="eyeGray" tag="i" class="icon-eye" v-on:tap="showPassword"></v-touch>
-                <v-touch v-show="eyeHighlight" tag="i" class="icon-eye on" v-on:tap="hidePassword"></v-touch>
-              </div>
-            </div>
-            <div class="submit-wrap">
-              <a v-show="passwordGraySubmit" href="javascript:;" class="btn-submit">登录</a>
-              <v-touch v-show="passwordHighlightSubmit" tag="a" class="btn-submit on" v-on:tap="passwordFormSubmit">登录</v-touch>
-              <p>
-                <a href="" class="float_left skip-password">忘记密码？</a>
-                <a href="" class="float_right">快速注册</a>
-              </p>
-            </div>
-        </div>
+        <components :is="currentView"></components>
     </div>
 </template>
 <script>
   import Vue from 'vue';
+  import Phone from '../../components/login/Phone.vue'
+  import Password from '../../components/login/Password.vue'
   export default {
       data(){
           return {
-              phoneHighlightSubmit : false,
-              phoneGraySubmit : true,
-              passwordGraySubmit : true,
-              passwordHighlightSubmit : false,
-              eyeGray : false,
-              eyeHighlight : false,
-              phoneFormClear : {
-                  phone : false,
-                  verifyCode : false,
-                  smsCode : false
-              },
-              passwordFormClear : {
-                phone : false,
-                password : false
-              },
-              phoneForm : {
-                  phone : '',
-                  verifyCode : '',
-                  smsCode : ''
-              },
-              passwordForm : {
-                  phone : '',
-                  password : ''
-              },
-              phoneClear : '',
-              phoneActive : true,
-              passwordActive  : false,
-              phonePanel : true,
-              passwordPanel : false
+              navIndex : 0,
+              currentView : 'phone',
+              navs : [
+                {
+                  text : '手机登录',
+                  view : 'phone'
+                },
+                {
+                  text : '密码登录',
+                  view : 'password'
+                }
+              ],
           }
-      },
-      watch : {
-        phoneForm : {
-            handler : function(val){
-                if( val.phone == '' ){
-                    this.phoneFormClear.phone = false;
-                }else{
-                    this.phoneFormClear.phone = true;
-                }
-                if( val.verifyCode == '' ){
-                  this.phoneFormClear.verifyCode = false;
-                }else{
-                  this.phoneFormClear.verifyCode = true;
-                }
-                if( val.smsCode == '' ){
-                  this.phoneFormClear.smsCode = false;
-                }else{
-                  this.phoneFormClear.smsCode = true;
-                }
-                if( val.phone && val.verifyCode && val.smsCode ){
-                    this.phoneGraySubmit = false;
-                    this.phoneHighlightSubmit = true;
-                }else{
-                  this.phoneGraySubmit = true;
-                  this.phoneHighlightSubmit = false;
-                }
-            },
-            deep : true
-        },
-        passwordForm : {
-          handler : function(val){
-              if( val.phone == '' ){
-                this.passwordFormClear.phone = false;
-              }else{
-                this.passwordFormClear.phone = true;
-              }
-              if( val.password == '' ){
-                this.eyeGray = false;
-                this.eyeHighlight = false;
-                this.$refs.password.type = 'password';
-                this.passwordFormClear.password = false;
-              }else{
-                this.eyeGray = true;
-                this.passwordFormClear.password = true;
-              }
-              if( val.phone && val.password ){
-                this.passwordGraySubmit = false;
-                this.passwordHighlightSubmit = true;
-              }else{
-                this.passwordGraySubmit = true;
-                this.passwordHighlightSubmit = false;
-              }
-          },
-          deep : true
-        },
       },
       mounted : function(){
       },
       methods : {
-          hidePassword : function(){
-            this.eyeGray = true;
-            this.eyeHighlight = false;
-            this.$refs.password.type = 'password';
+          togglePanel(item,index){
+             this.navIndex = index;
+             this.currentView = item.view;
           },
-          showPassword : function(){
-              this.eyeGray = false;
-              this.eyeHighlight = true;
-              this.$refs.password.type = 'text';
-          },
-          phoneFormSubmit(){
-              console.log(11);
-          },
-          passwordFormSubmit(){
-              console.log(11);
-          },
-          showPhonePanel(){
-              this.phoneActive = true;
-              this.passwordActive = false;
-              this.passwordPanel = false;
-              this.phonePanel = true;
-          },
-          showPassWordPanel : function(){
-              this.phoneActive = false;
-              this.passwordActive = true;
-              this.passwordPanel = true;
-              this.phonePanel = false;
-          },
-          clearPhoneFormPhone : function(){
-              this.phoneForm.phone = '';
-              this.phoneFormClear.phone = false;
-          },
-          clearPhoneFormVerifyCode : function(){
-              this.phoneForm.verifyCode = '';
-              this.phoneFormClear.verifyCode = false;
-          },
-          clearPhoneFormSMScode : function(){
-            this.phoneForm.smsCode = '';
-            this.phoneFormClear.smsCode = false;
-          },
-          clearPasswordFormPhone : function(){
-            this.passwordForm.phone = '';
-            this.passwordFormClear.phone = false;
-          },
-          clearPasswordFormPassword : function(){
-            this.passwordForm.password = '';
-            this.passwordFormClear.password = false;
-          }
       },
       components : {
-
+          Phone,Password
       }
   }
 </script>
@@ -258,14 +73,11 @@
   .wrap{
     height:px2rem(74);
     @extend .relative;
-    @extend .flex;
     .img-wrap{
       width: px2rem(182);
       height: px2rem(52);
-      @extend .absolute;
-      top:px2rem(10);
-      right: 0;
       overflow: hidden;
+      margin:px2rem(10) 0 0 0;
       img{
         width: 100%;
       }
@@ -279,10 +91,9 @@
       background-size:px2rem(37) auto;
     }
     .icon-eye{
-      @extend .absolute;
-      right:0;
+      @extend .block;
       width: px2rem(50);
-      height: 100%;
+      height: px2rem(74);
       background: url("../../assets/images/icon/icon-eye.png") no-repeat center;
       background-size:px2rem(41) auto;
     }
@@ -293,10 +104,11 @@
     .btn-getcode{
       min-width: px2rem(182);
       height: px2rem(60);
+      @extend .block;
       line-height: px2rem(60);
-      @extend .absolute;
-      top:px2rem(2);
-      right: 0;
+      /*@extend .absolute;*/
+      /*top:px2rem(2);*/
+      /*right: 0;*/
 
       background:$color_0086d1;
       border-radius: px2rem(5);
@@ -306,9 +118,9 @@
 
     }
     .input-wrap{
-      width: px2rem(322);
+      /*width: px2rem(322);*/
       position: relative;
-      padding:0 px2rem(54) 0 0;
+      /*padding:0 px2rem(54) 0 0;*/
     }
     & > i{
       width:px2rem(65);

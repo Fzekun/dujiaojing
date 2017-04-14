@@ -12,11 +12,11 @@
       <div class="receiving_info-box">
           <div class="wrap">
               <h3>
-                  <span class="float_left">张亮</span>
-                  <span class="float">13718163294</span>
+                  <span class="bold float_left">张亮</span>&nbsp;
+                  <span class="bold float">13718163294</span>
               </h3>
               <p></p>
-              <p>北京市朝阳区西单北大街号西单图书大厦单北大
+              <p class="gray_color">北京市朝阳区西单北大街号西单图书大厦单北大
                 街66号西单图书大厦</p>
           </div>
       </div>
@@ -131,6 +131,9 @@
   }
   .red_color{
     color:$color_e94738;
+  }
+  .bold{
+    font-weight: bold;
   }
   .gray_color{
       color:$color_999999;

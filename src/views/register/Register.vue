@@ -2,18 +2,18 @@
     <div>
         <div class="form">
             <div class="form-group">
-                <div class="wrap">
+                <div class="wrap flex">
                     <i class="icon-phone"></i>
-                    <div class="input-wrap">
+                    <div class="input-wrap flex_item">
                       <input v-model="form.phone" placeholder="手机号" maxlength="11" class="input phone" type="tel" />
                       <v-touch v-show="clear.phone" tag="span" class="icon-clear" v-on:tap="clearPhoneValue"></v-touch>
                     </div>
                 </div>
             </div>
             <div class="form-group">
-                <div class="wrap">
+                <div class="wrap flex">
                   <i class="icon-verify"></i>
-                  <div class="input-wrap">
+                  <div class="input-wrap flex_item">
                     <input v-model="form.verifyCode" placeholder="请输入校验码" maxlength="4" class="input phone" type="tel" />
                     <v-touch v-show="clear.verifyCode" tag="span" class="icon-clear" v-on:tap="clearVerifyCodeValue"></v-touch>
                   </div>
@@ -23,37 +23,43 @@
                 </div>
             </div>
             <div class="form-group">
-              <div class="wrap">
+              <div class="wrap flex">
                 <i class="icon-smscode"></i>
-                <div class="input-wrap">
+                <div class="input-wrap flex_item">
                   <input v-model="form.smsCode" placeholder="请输入短信验证码" maxlength="6" class="input phone" type="tel" />
                   <v-touch v-show="clear.smsCode" tag="span" class="icon-clear" v-on:tap="clearSmsCodeValue"></v-touch>
                 </div>
-                <a href="javascript:;" class="btn-getcode">获取验证码</a>
+                <div>
+                    <a href="javascript:;" class="btn-getcode">获取验证码</a>
+                </div>
+
               </div>
             </div>
             <div class="form-group">
-              <div class="wrap">
+              <div class="wrap flex">
                 <i class="icon-password"></i>
-                <div class="input-wrap">
+                <div class="input-wrap flex_item">
                   <input ref="password" v-model="form.password" placeholder="设置6-20位密码" maxlength="20" class="input phone" type="password" />
                   <v-touch v-show="clear.password" tag="span" class="icon-clear" v-on:tap="clearPasswordValue"></v-touch>
                 </div>
-                <v-touch v-show="eyeGray" tag="i" class="icon-eye" v-on:tap="showPassword"></v-touch>
-                <v-touch v-show="eyeHighlight" tag="i" class="icon-eye on" v-on:tap="hidePassword"></v-touch>
+                <div>
+                  <v-touch v-show="eyeGray" tag="i" class="icon-eye" v-on:tap="showPassword"></v-touch>
+                  <v-touch v-show="eyeHighlight" tag="i" class="icon-eye on" v-on:tap="hidePassword"></v-touch>
+                </div>
+
               </div>
             </div>
             <div class="form-group">
-              <div class="wrap">
+              <div class="wrap flex">
                 <i class="icon-invitecode"></i>
-                <div class="input-wrap">
-                  <input placeholder="请输入邀请码（选填）" class="input phone" type="text" />
+                <div class="input-wrap flex_item">
+                  <input v-model="form.inviteCode" placeholder="请输入邀请码（选填）" class="input phone" type="text" />
+                  <v-touch v-show="clear.inviteCode" tag="span" class="icon-clear" v-on:tap="clearInviteCodeValue"></v-touch>
                 </div>
                 <i class="icon-doubt"></i>
               </div>
             </div>
             <div class="submit-wrap">
-
                 <a v-show="submitGray" href="javascript:;" class="btn-submit">登录</a>
                 <v-touch v-show="submitHighlight" tag="a" class="btn-submit on" v-on:tap="formSubmit">登录</v-touch>
                 <p>
@@ -70,9 +76,6 @@
               </div>
         </alert>
     </div>
-    <!--<div class="alert-content">-->
-
-    <!--</div>-->
 </template>
 
 <script>
@@ -119,13 +122,22 @@
                 }else{
                   this.clear.smsCode = true;
                 }
+                if( val.inviteCode == '' ){
+                  this.clear.inviteCode = false;
+                }else{
+                  this.clear.inviteCode = true;
+                }
                 if( val.password == '' ){
                   this.eyeGray = false;
                   this.eyeHighlight = false;
                   this.$refs.password.type = 'password';
                   this.clear.password = false;
                 }else{
-                  this.eyeGray = true;
+                  if( this.eyeHighlight ){
+                    this.eyeGray = false;
+                  }else{
+                    this.eyeGray = true;
+                  }
                   this.clear.password = true;
                 }
                 if( val.phone && val.verifyCode && val.smsCode && val.password ){
@@ -151,6 +163,10 @@
           clearSmsCodeValue(){
             this.form.smsCode = '';
             this.clear.smsCode = false;
+          },
+          clearInviteCodeValue(){
+              this.form.inviteCode = '';
+              this.clear.inviteCode = false;
           },
           clearPasswordValue(){
              this.form.password = '';
@@ -197,32 +213,26 @@
       .wrap{
           height:px2rem(74);
           @extend .relative;
-          @extend .flex;
           .img-wrap{
               width: px2rem(182);
               height: px2rem(52);
-              @extend .absolute;
-              top:px2rem(10);
-              right: 0;
+              margin: px2rem(10) 0 0 0;
               overflow: hidden;
               img{
                   width: 100%;
               }
           }
           .icon-doubt{
-              @extend .absolute;
-              right:0;
               width: px2rem(50);
               height: 100%;
               background: url("../../assets/images/icon/icon-doubt.png") no-repeat center;
               background-size:px2rem(37) auto;
           }
           .icon-eye{
-              @extend .absolute;
-              right:0;
+              @extend .block;
               width: px2rem(50);
-              height: 100%;
-              background: url("../../assets/images/icon/icon-eye.png") no-repeat center;
+              height: px2rem(74);
+              background:url("../../assets/images/icon/icon-eye.png") no-repeat center;
               background-size:px2rem(41) auto;
           }
           .icon-eye.on{
@@ -233,10 +243,9 @@
             min-width: px2rem(182);
             height: px2rem(60);
             line-height: px2rem(60);
-            @extend .absolute;
-            top:px2rem(2);
+            @extend .block;
+            margin:px2rem(2) 0 0 0;
             right: 0;
-
             background:$color_0086d1;
             border-radius: px2rem(5);
             @extend .text_center;

@@ -7,6 +7,8 @@ import MyOrder from './MyOrder.vue'
 import store from '../../vuex/store'
 var VueTouch = require('vue-touch')
 Vue.use(VueTouch, {name: 'v-touch'})
+import { Loadmore } from 'mint-ui';
+Vue.component(Loadmore.name, Loadmore);
 
 new Vue({
   el: '#my-order',

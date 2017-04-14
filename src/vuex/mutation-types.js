@@ -8,3 +8,9 @@ export const INDEX_GET_DATA = 'INDEX_GET_DATA'
 export const SHOW_CONFIRM = 'SHOW_CONFIRM';
 export const HIDE_CONFIRM = 'HIDE_CONFIRM';
 
+//分类
+export const SHOW_TOAST = 'SHOW_CONFIRM';
+export const HIDE_TOAST = 'HIDE_TOAST';
+export const GET_RESTRICTION = 'GET_RESTRICTION';
+export const COMPUTE_ORDER_TOTAL = 'COMPUTE_ORDER_TOTAL';
+

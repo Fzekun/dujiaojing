@@ -2,9 +2,11 @@
     <div>
         <nav class="fixed-top">
             <div class="scroll-box">
-                <div>
-                    <v-touch :key="tab.id" tag="a" :class="{ active : active==index }" v-for="(tab,index) in tabs" v-on:tap="tabToggle(tab,index)">{{ tab.name }}</v-touch>
-                </div>
+                <!--<scroller lock-y>-->
+                  <div class="scroll-wrap">
+                      <v-touch :key="tab.id" tag="a" :class="{ active : active==index }" v-for="(tab,index) in tabs" v-on:tap="tabToggle(tab,index)">{{ tab.name }}</v-touch>
+                  </div>
+                <!--</scroller>-->
             </div>
         </nav>
         <component :is="currentView">
@@ -105,8 +107,8 @@
 
 <style rel="stylesheet/scss" lang="scss" spoend>
   @import '../../assets/scss/common.scss';
-  body{
-      background: none;
+  body,html{
+      background: $white;
   }
   .fixed-top{
       background: $white;
@@ -116,12 +118,14 @@
       @extend .text_center;
       .scroll-box{
         overflow-y: hidden;
-        & > div{
+        .scroll-wrap{
+          /*@extend .inline_block;*/
           overflow-x: auto;
           white-space: nowrap;
           font-size: 0;
           -webkit-overflow-scrolling: touch;
-          height: px2rem(97);
+          height: px2rem(105);
+          /*background: red;*/
         }
       }
       a{

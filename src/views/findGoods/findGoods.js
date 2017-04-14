@@ -4,12 +4,12 @@ import findGoods from './findGoods.vue'
 Vue.config.productionTip = false
 import VueLazyload from 'vue-lazyload'
 Vue.use(VueLazyload)
-
+import store from '../../vuex/store'
 
 /* eslint-disable no-new */
 new Vue({
   el: '#findGoods',
-  //store,
+  store,
   template: '<findGoods/>',
   components: { findGoods }
 })

@@ -19,7 +19,8 @@
     <!-- 未登录 start -->
     <div class="not-logged">
         <div>
-          <a href="" class="login-btn">登录/注册</a>
+          <a href="" class="login-btn">登录</a>
+          <a href="" class="login-btn">退出</a>
         </div>
     </div>
     <!-- 未登录 start -->

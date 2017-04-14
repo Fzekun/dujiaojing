@@ -59,6 +59,7 @@
                 <i class="icon more"></i>
           </header>
           <section class="scroll">
+            <!--<scroller lock-y bounce="true">-->
                 <ul>
                     <li v-for="item in imgUrl">
                         <a href="">
@@ -70,6 +71,7 @@
                         </a>
                     </li>
                 </ul>
+            <!--</scroller>-->
           </section>
       </div>
      <!-- 新品推荐 end -->
@@ -85,7 +87,13 @@
        <header>
           <h2>为您推荐</h2>
        </header>
-      <mt-loadmore :bottom-distance="50" @bottom-status-change="handleBottomChange" ref="loadmore"  :bottom-method="loadBottom"  :bottom-all-loaded="allLoaded">
+      <mt-loadmore
+                  :bottom-distance="50"
+                  @bottom-status-change="handleBottomChange"
+                  ref="loadmore"
+                  :bottom-method="loadBottom"
+                  :bottom-all-loaded="allLoaded"
+      >
          <div class="recommend-list">
              <ul>
                <li v-for="item in items">
@@ -105,7 +113,7 @@
          </div>
         <div slot="bottom" class="loadmore-bottom">
           <!--<span>{{ bottomStatus }}</span>-->
-          <p v-show="bottomStatus !== 'loading'">{{statusText}}</p>
+          <p class="loading-text" v-show="bottomStatus !== 'loading'">{{statusText}}</p>
           <p class="bottom-loading" v-show="bottomStatus === 'loading'" :class="{ loading : bottomStatus === 'loading' }"></p>
         </div>
         </mt-loadmore>
@@ -119,6 +127,7 @@
 <script>
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import CommonFooter from '../../components/Footer.vue'
+//import { Scroller } from 'vux'
 //import {mapGetters} from 'vuex'
 //import store from '../../vuex/store'
 export default {
@@ -215,7 +224,7 @@ export default {
     components: {
         swiper,
         swiperSlide,
-        'common-footer': CommonFooter
+        CommonFooter
     },
     methods : {
       loadBottom(id){
@@ -229,7 +238,7 @@ export default {
           })
           this.bottomStatus = 'pull';
           this.$refs.loadmore.onBottomLoaded(id);
-        },2000)
+        },500)
       },
       handleBottomChange(status){
           if( status == 'drop' ){
@@ -251,6 +260,10 @@ $radius : px2rem(25);
 .loadmore-bottom{
     width: 100%;
     @extend .text_center;
+}
+.loading-text{
+  font-size: px2rem(26);
+  line-height: px2rem(48);
 }
 .bottom-loading{
     width: 100%;
@@ -444,14 +457,15 @@ $radius : px2rem(25);
     span{
         width:px2rem(12);
         height:px2rem(12);
-        background:#fff;
+        background:rgba(255,255,255,.55);
         float:left;
         margin:0 px2rem(14) 0 0;
         border-radius:50%;
         //background-color:$color_c7effb;
     }
     span.active{
-        background-color:$color_018bd6;
+        background-color:$white;
+
     }
 }
 /*常用采购*/
@@ -462,9 +476,10 @@ $radius : px2rem(25);
       @include header;
     }
     .scroll{
-        overflow-y: hidden;
+        height:px2rem(264);
+        overflow: hidden;
         ul{
-          height:px2rem(244);
+          height: px2rem(254);
           padding:px2rem(20) px2rem(20) 0 px2rem(20);
           overflow-x: auto;
           white-space: nowrap;
@@ -475,7 +490,7 @@ $radius : px2rem(25);
           margin:0;
         }
         li{
-           display: inline-block;
+           @extend .inline_block;
            margin:0 px2rem(46) 0 0;
            width:px2rem(160);
            .img-wrap{

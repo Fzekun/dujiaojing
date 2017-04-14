@@ -1,6 +1,10 @@
 <template>
     <div class="all-order">
-      <view-box>
+      <mt-loadmore :auto-fill="true" :bottom-distance="50"
+                   @bottom-status-change="handleBottomChange"
+                   ref="loadmore"  :bottom-method="loadBottom"
+                   :bottom-all-loaded="allLoaded"
+      >
         <ul class="order-list">
             <li>
                 <header class="order-header">
@@ -46,37 +50,37 @@
               <div class="order-cotent">
                 <div class="wrap">
                     <div class="order-image">
-                        <div class="img-wrap float_left">
+                        <div class="img-wrap">
                           <a href="">
                             <img src="../../assets/images/order-commodity.jpg" alt="">
                           </a>
                           <i class="commodity-number">×1</i>
                         </div>
-                        <div class="img-wrap float_left">
+                        <div class="img-wrap">
                           <a href="">
                             <img src="../../assets/images/order-commodity.jpg" alt="">
                           </a>
                           <i class="commodity-number">×1</i>
                         </div>
-                        <div class="img-wrap float_left">
+                        <div class="img-wrap">
                           <a href="">
                             <img src="../../assets/images/order-commodity.jpg" alt="">
                           </a>
                           <i class="commodity-number">×1</i>
                         </div>
-                        <div class="img-wrap float_left">
+                        <div class="img-wrap">
                           <a href="">
                             <img src="../../assets/images/order-commodity.jpg" alt="">
                           </a>
                           <i class="commodity-number">×1</i>
                         </div>
-                        <div class="img-wrap float_left">
+                        <div class="img-wrap">
                           <a href="">
                             <img src="../../assets/images/order-commodity.jpg" alt="">
                           </a>
                           <i class="commodity-number">×1</i>
                         </div>
-                        <div class="img-wrap float_left">
+                        <div class="img-wrap">
                           <a href="">
                             <img src="../../assets/images/order-commodity.jpg" alt="">
                           </a>
@@ -107,37 +111,7 @@
             <div class="order-cotent">
               <div class="wrap">
                 <div class="order-image">
-                  <div class="img-wrap float_left">
-                    <a href="">
-                      <img src="../../assets/images/order-commodity.jpg" alt="">
-                    </a>
-                    <i class="commodity-number">×1</i>
-                  </div>
-                  <div class="img-wrap float_left">
-                    <a href="">
-                      <img src="../../assets/images/order-commodity.jpg" alt="">
-                    </a>
-                    <i class="commodity-number">×1</i>
-                  </div>
-                  <div class="img-wrap float_left">
-                    <a href="">
-                      <img src="../../assets/images/order-commodity.jpg" alt="">
-                    </a>
-                    <i class="commodity-number">×1</i>
-                  </div>
-                  <div class="img-wrap float_left">
-                    <a href="">
-                      <img src="../../assets/images/order-commodity.jpg" alt="">
-                    </a>
-                    <i class="commodity-number">×1</i>
-                  </div>
-                  <div class="img-wrap float_left">
-                    <a href="">
-                      <img src="../../assets/images/order-commodity.jpg" alt="">
-                    </a>
-                    <i class="commodity-number">×1</i>
-                  </div>
-                  <div class="img-wrap float_left">
+                  <div class="img-wrap" v-for="n in 10">
                     <a href="">
                       <img src="../../assets/images/order-commodity.jpg" alt="">
                     </a>
@@ -167,37 +141,7 @@
             <div class="order-cotent">
               <div class="wrap">
                 <div class="order-image">
-                  <div class="img-wrap float_left">
-                    <a href="">
-                      <img src="../../assets/images/order-commodity.jpg" alt="">
-                    </a>
-                    <i class="commodity-number">×1</i>
-                  </div>
-                  <div class="img-wrap float_left">
-                    <a href="">
-                      <img src="../../assets/images/order-commodity.jpg" alt="">
-                    </a>
-                    <i class="commodity-number">×1</i>
-                  </div>
-                  <div class="img-wrap float_left">
-                    <a href="">
-                      <img src="../../assets/images/order-commodity.jpg" alt="">
-                    </a>
-                    <i class="commodity-number">×1</i>
-                  </div>
-                  <div class="img-wrap float_left">
-                    <a href="">
-                      <img src="../../assets/images/order-commodity.jpg" alt="">
-                    </a>
-                    <i class="commodity-number">×1</i>
-                  </div>
-                  <div class="img-wrap float_left">
-                    <a href="">
-                      <img src="../../assets/images/order-commodity.jpg" alt="">
-                    </a>
-                    <i class="commodity-number">×1</i>
-                  </div>
-                  <div class="img-wrap float_left">
+                  <div class="img-wrap" v-for="n in 10">
                     <a href="">
                       <img src="../../assets/images/order-commodity.jpg" alt="">
                     </a>
@@ -218,20 +162,25 @@
             </footer>
           </li>
         </ul>
-      </view-box>
+        <div slot="bottom" class="loadmore-bottom">
+          <!--<span>{{ bottomStatus }}</span>-->
+          <p class="loading-text" v-show="bottomStatus !== 'loading'">{{statusText}}</p>
+          <p class="bottom-loading" v-show="bottomStatus === 'loading'" :class="{ loading : bottomStatus === 'loading' }"></p>
+        </div>
+      </mt-loadmore>
     </div>
 </template>
 <script>
-    import { ViewBox } from 'vux'
     import { mapActions } from 'vuex'
     export default{
         data(){
             return {
-
+              allLoaded : false,
+              bottomStatus : 'pull',
+              statusText : '上拉加载更多',
             }
         },
         components : {
-          ViewBox
         },
         mounted(){
 
@@ -239,12 +188,52 @@
         methods : {
           ...mapActions([
               'showConfirm'
-          ])
+          ]),
+          loadBottom(id){
+            this.statusText = 'loading...';
+            this.bottomStatus = 'loading';
+            setTimeout(()=>{
+              this.items.push({
+                name: 1,
+                price: 1,
+                text: 1
+              })
+              this.bottomStatus = 'pull';
+              this.$refs.loadmore.onBottomLoaded(id);
+            },2000)
+          },
+          handleBottomChange(status){
+            if( status == 'drop' ){
+              this.statusText = '释放刷新';
+            }
+            if( status == 'pull' ){
+              this.statusText = '上拉加载更多';
+            }
+          }
         }
     }
 </script>
 <style rel="stylesheet/scss" lang="scss" spoend>
+
   @import "../../assets/scss/common";
+  /* 下拉loading */
+  .loadmore-bottom{
+    width: 100%;
+    @extend .text_center;
+  }
+  .loading-text{
+    font-size: px2rem(26);
+    line-height: px2rem(48);
+  }
+  .bottom-loading{
+    width: 100%;
+    height: px2rem(124);
+  }
+  .bottom-loading.loading{
+    background: url("../../assets/images/icon/loading_white.gif") no-repeat center;
+    background-size: px2rem(128) auto;
+  }
+  /* 下拉loading */
     .all-order{
        position: absolute;
         top:px2rem(98);
@@ -254,9 +243,17 @@
     }
     .order-list{
         li{
-          background: $white;
-          margin: 0 0 px2rem(10) 0;
+          /*margin: 0 0 px2rem(10) 0;*/
           overflow: hidden;
+        }
+        li:after{
+          content:'';
+          display: block;
+          height: px2rem(10);
+          background: $color_efeff4;
+        }
+        li:last-child:after{
+            @extend .none;
         }
         font-size: px2rem(26);
     }
@@ -315,10 +312,15 @@
            padding: 0 0 0 px2rem(30);
           .order-image{
               overflow: hidden;
-              padding: px2rem(30) 0 px2rem(10) 0;
+              padding: px2rem(30) px2rem(8) px2rem(10) 0;
               border-bottom: 1px solid $color_efeff4;
+              overflow-x: auto;
+              white-space: nowrap;
+              font-size: 0;
+              -webkit-overflow-scrolling: touch;
               .img-wrap{
                   margin: 0  px2rem(22) px2rem(10) 0;
+                  display: inline-block;
               }
           }
           .order-image-text{

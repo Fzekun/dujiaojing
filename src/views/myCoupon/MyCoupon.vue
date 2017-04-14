@@ -29,7 +29,7 @@
                 view : 'YetUnused'
               },
               {
-                name : '已使用',
+                name : '已过期',
                 view : 'Expired'
               }
             ]

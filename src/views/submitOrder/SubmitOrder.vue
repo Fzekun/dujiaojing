@@ -5,11 +5,11 @@
         <a href="">
           <div class="wrap">
             <h3>
-              <span class="float_left">张亮</span>
-              <span class="float">13718163294</span>
+              <span class="float_left bold">张亮</span>&nbsp;
+              <span class="float bold">13718163294</span>
             </h3>
             <p></p>
-            <p>北京市朝阳区西单北大街号西单图书大厦单北大
+            <p class="gray_color">北京市朝阳区西单北大街号西单图书大厦单北大
               街66号西单图书大厦</p>
             <i class="u-icon-arr"></i>
           </div>
@@ -70,15 +70,20 @@
          <div class="pay-wrap flex">
            <p>支付方式</p>
            <div>
-             <a href="" class="float_left chat-pay">微信支付</a>
-             <a href="" class="float_left">货到付款</a>
+             <v-touch :key="item.id" class="float_left" :class="{ active : index == payTypeIndex, 'chat-pay':index==0 }"  v-for="(item,index) in payTypes" v-on:tap="togglePayTypes(index)" tag="a">{{ item.text }}</v-touch>
            </div>
          </div>
           <div class="delivery-type flex">
             <p>配送方式</p>
             <div>
-              <a href="" class="float_left">配送</a>
-              <a href="" class="float_left">自提</a>
+
+              <v-touch class="float_left"
+                       :key="item.id"
+                       :class="{ active : index == deliveryMethodsIndex}"
+                       v-for="(item,index) in deliveryMethods"
+                       v-on:tap="toggleDeliveryMethods(index)" tag="a">{{ item.text }}</v-touch>
+              <!--<a href="" class="float_left">配送</a>-->
+              <!--<a href="" class="float_left">自提</a>-->
             </div>
           </div>
           <div class="coupon">
@@ -95,8 +100,6 @@
         <p><span class="float_left">订单备注</span><textarea maxlength="30" class="float_left" placeholder="选填，30字以内"></textarea></p>
       </div>
       <div class="order_details-box">
-
-
           <div class="price-wrap">
             <div class="price-box">
               <p>
@@ -122,7 +125,7 @@
             </div>
           </div>
           <div class="submit-wrap">
-              <p>实付金额：<span class="red_color">￥14145.00</span></p>
+              <p>实付金额：<span class="red_color duty-price">￥14145.00</span></p>
               <a href="" class="submit-btn">提交订单</a>
           </div>
       </div>
@@ -132,19 +135,49 @@
   export default{
     data(){
       return {
-
+        deliveryMethodsIndex : 0,
+        payTypeIndex : 0,
+        //配送方式
+        deliveryMethods : [
+          {
+              text : '配送',
+              type : ''
+          },
+          {
+              text : '自提',
+              type : ''
+          }
+        ],
+        payTypes : [
+          {
+            text : '微信支付',
+            type : ''
+          },
+          {
+            text : '货到付款',
+            type : ''
+          }
+        ]
       }
     },
     mounted(){
 
     },
     methods : {
-
+      toggleDeliveryMethods(index){
+          this.deliveryMethodsIndex = index;
+      },
+      togglePayTypes( index ){
+         this.payTypeIndex = index;
+      }
     }
   }
 </script>
 <style rel="stylesheet/scss" lang="scss" spoend>
   @import "../../assets/scss/common";
+  .duty-price{
+    font-size: px2rem(38);
+  }
   .coupon{
     height: px2rem(80);
     line-height: px2rem(80);
@@ -179,6 +212,9 @@
   .gray_color{
       color:$color_999999;
   }
+  .bold{
+    font-weight: bold;
+  }
   .btn{
     @extend .block;
     padding: 0 px2rem(25);
@@ -207,6 +243,7 @@
     width:100%;
     height: px2rem(3);
     background: url("../../assets/images/icon/icon-order_line.png") no-repeat;
+    background-size: 100% auto;
   }
   .receiving_info-box{
     a{
@@ -226,6 +263,7 @@
         }
         p{
             line-height: px2rem(40);
+
         }
     }
   }
@@ -241,7 +279,6 @@
         line-height: px2rem(77);
         @include overflow_omit;
     }
-
     .commodity{
       padding: 0 0 0 px2rem(30);
       overflow: hidden;

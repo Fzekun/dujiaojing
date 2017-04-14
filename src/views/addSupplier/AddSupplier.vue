@@ -1,11 +1,14 @@
 <template>
     <div class="addSupplier">
         <div class="header">
-            <div class="input-wrap">
-              <span class="float_left">
+            <div class="wrap flex">
+              <span>
                   邀请码：
               </span>
-              <input type="text" placeholder="请输入邀请码" class="input float_left">
+              <div class="flex_item input-wrap">
+                <input v-model="inviteCode" type="text" placeholder="请输入邀请码" class="input float_left">
+                <v-touch v-show="showInviteCode" tag="span" class="icon-clear" v-on:tap="clearInviteCode"></v-touch>
+              </div>
             </div>
             <a href="" class="submit-btn">提交</a>
         </div>
@@ -17,8 +20,8 @@
                     <thead>
                         <tr>
                             <td>供应商</td>
-                            <td>邀请码状态</td>
-                            <td>供应商</td>
+                            <td>邀请码</td>
+                            <td class="status-td">状态</td>
                             <td></td>
                         </tr>
                     </thead>
@@ -26,8 +29,8 @@
                         <td>
                             <p class="text-tailor">问冷冻食品问冷冻食品有限公司问冷冻食品有限公司有限公司</p>
                         </td>
-                        <td>V34</td>
-                        <td>添加成功</td>
+                        <td class="invite-code">V34</td>
+                        <td class="status-td">添加成功</td>
                         <td>
                             <span class="icon-dustbin"></span>
                         </td>
@@ -49,7 +52,22 @@
   export default{
     data(){
       return {
-          confirm : false
+          confirm : false,
+          inviteCode : '',
+          showInviteCode : false
+      }
+    },
+    watch : {
+      inviteCode(val){
+          if( val != '' ){
+              this.showInviteCode = true;
+          }
+      }
+    },
+    methods : {
+      clearInviteCode(){
+        this.inviteCode = '';
+        this.showInviteCode = false;
       }
     },
     mounted(){
@@ -68,6 +86,21 @@
   .line{
     height: px2rem(10);
     background: $color_efeff4;
+  }
+  .icon-clear{
+    @extend  .absolute;
+    right:0;
+    top:0;
+    height:px2rem(74);
+    width: px2rem(54);
+    background: url("../../assets/images/icon/icon-clear.png") no-repeat center;
+    background-size: px2rem(33) auto;
+  }
+  .invite-code{
+    width: px2rem(150);
+  }
+  .status-td{
+      width: px2rem(140);
   }
   .cancel-order{
     @extend .text_center;
@@ -89,19 +122,26 @@
     }
   }
   .text-tailor{
-      width: px2rem(345);
+      width: px2rem(278);
       @include overflow_omit;
   }
   .addSupplier{
       font-size: px2rem(26);
       .header{
           padding: px2rem(26) 0 px2rem(105) px2rem(30);
-          .input-wrap{
+          .wrap{
               line-height: px2rem(74);
               font-size: px2rem(28);
+              overflow: hidden;
+              border-bottom: 1px solid $color_efeff4;
+              height: px2rem(74);
+              padding: 0 px2rem(30) 0 0;
+          }
+          .input-wrap{
+              @extend .relative;
           }
           .input{
-              width:px2rem(560);
+              width:100%;
               padding:px2rem(18) 0;
               font-size: px2rem(28);
               line-height: 1.2em;
@@ -109,11 +149,6 @@
         .input::-webkit-input-placeholder{
             color:$color_999999;
         }
-      }
-      .input-wrap{
-          overflow: hidden;
-          border-bottom: 1px solid $color_efeff4;
-          height: px2rem(74);
       }
       .submit-btn{
           @extend .block;
