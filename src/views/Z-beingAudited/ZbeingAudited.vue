@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="success-wrap">
+        <div class="wrap">
             <div class="tip-wrap">
                 <i class="icon-success"></i>
                 <h2>信息提交成功！</h2>
@@ -48,7 +48,7 @@
   body{
       background: none;
   }
-  .success-wrap{
+  .wrap{
       padding: px2rem(140) 0 0 0;
       .tip-wrap{
           @extend .text_center;
@@ -98,8 +98,8 @@
       }
       .icon-success{
         @extend .block;
-        width: px2rem(155);
-        height: px2rem(155);
+        width: px2rem(106);
+        height: px2rem(106);
         background: url("../../assets/images/icon/icon-success_big.png") no-repeat;
         background-size:100% auto;
         margin: 0 auto px2rem(42) auto;

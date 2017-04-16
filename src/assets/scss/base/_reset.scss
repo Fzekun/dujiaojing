@@ -40,6 +40,8 @@ button {
   padding:0;
   background:none;
 }
+input[type="search"]{-webkit-appearance:none;}
+input::-webkit-search-cancel-button {display: none;}
 input[type="password"],input[type="text"],input[type="button"],input[type="submit"],input[type="reset"],input[type="file"]::-webkit-file-upload-button,button,select,textarea{
   -webkit-appearance:none;
   appearance:none;
