@@ -53,15 +53,16 @@
       @extend .flex;
       height: px2rem(80);
       background: $white;
+      /*border-bottom: 1px solid $color_efeff4;*/
       a{
           line-height: px2rem(80);
           font-size:px2rem(28);
           @extend .text_center;
+          border-bottom: px2rem(3) solid rgba(0,0,0,0);
       }
       a.active{
-        height: px2rem(80);
         @extend .relative;
-        border-bottom:px2rem(3) solid $color_0086d1;
+        border-bottom:px2rem(3) solid rgba(0,134,209,1);
       }
   }
 </style>

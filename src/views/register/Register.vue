@@ -14,11 +14,12 @@
                 <div class="wrap flex">
                   <i class="icon-verify"></i>
                   <div class="input-wrap flex_item">
-                    <input v-model="form.verifyCode" placeholder="请输入校验码" maxlength="4" class="input phone" type="tel" />
+                    <input v-model="form.verifyCode" placeholder="请输入校验码" maxlength="5" class="input phone" type="tel" />
                     <v-touch v-show="clear.verifyCode" tag="span" class="icon-clear" v-on:tap="clearVerifyCodeValue"></v-touch>
                   </div>
                   <div class="img-wrap">
-                    <img class="verification-code" src="../../assets/images/img-verificationcode.jpg" alt="">
+                    <v-touch tag="img" :src="imgSrc" class="verification-code" v-on:tap="changeImgSrc"></v-touch>
+                    <!--<img class="verification-code" :src="imgSrc" alt="">-->
                   </div>
                 </div>
             </div>
@@ -30,7 +31,9 @@
                   <v-touch v-show="clear.smsCode" tag="span" class="icon-clear" v-on:tap="clearSmsCodeValue"></v-touch>
                 </div>
                 <div>
-                    <a href="javascript:;" class="btn-getcode">获取验证码</a>
+                    <v-touch v-if="showGetCode" tag="a" class="btn-getcode" v-on:tap="sendSMS">获取验证码</v-touch>
+                    <a v-else href="javascript:;" class="btn-getcode gray">{{ count }}s</a>
+
                 </div>
 
               </div>
@@ -60,7 +63,7 @@
               </div>
             </div>
             <div class="submit-wrap">
-                <a v-show="submitGray" href="javascript:;" class="btn-submit">登录</a>
+                <a v-show="submitGray" href="javascript:;" class="btn-submit">注册</a>
                 <v-touch v-show="submitHighlight" tag="a" class="btn-submit on" v-on:tap="formSubmit">登录</v-touch>
                 <p>
                     注册表示您同意<a href="" target="_blank">《马里马里服务条款》</a>
@@ -75,14 +78,37 @@
                     <p>请到“我的”页面中完善商户/店铺信息</p>
               </div>
         </alert>
+        <!--<alert :show-title="false" v-model="reminder" button-text="知道了">-->
+          <!--<div>-->
+            <!--<h3>友情提示</h3>-->
+            <!--<p>用户您好！以下为您提供建议注册平台</p>-->
+            <!--<p>终端商：微信、PC</p>-->
+            <!--<p>供应商：PC</p>-->
+            <!--<p>生产商：PC</p>-->
+            <!--<p>终端商：终端买家购买平台商品，如火锅店，-->
+              <!--麻辣烫店等。</p>-->
+            <!--<p>供应商：为终端供货，可从平台进货销售，也-->
+              <!--可销售自有渠道商品。</p>-->
+            <!--<p>生产商：厂家或一级代理，可以平台大批量销-->
+              <!--售自已的商品。</p>-->
+          <!--</div>-->
+        <!--</alert>-->
     </div>
 </template>
 
 <script>
+  import api from '../../api/api'
+  import re from '../../assets/js/tools/regexp'
+//  import _ from 'underscore'
+//  _.str = require('underscore.string');
   import { Alert } from 'vux'
   export default {
       data(){
           return {
+              reminder : true,
+              showGetCode : true,
+              count : 59,
+              imgSrc : api.url + '/patchca.png',
               show : false,
               submitGray : true,
               submitHighlight : false,
@@ -152,6 +178,10 @@
           }
       },
       methods : {
+          //切换图形验证码
+          changeImgSrc(){
+              this.imgSrc = api.url + '/patchca.png?now='+new Date().getTime()
+          },
           clearPhoneValue(){
               this.form.phone = '';
               this.clear.phone = false;
@@ -182,11 +212,96 @@
             this.eyeHighlight = true;
             this.$refs.password.type = 'text';
           },
+
+          sendSMS(){
+              if( !(this.checkPhone() && this.checkVerifyCode()) ){
+                  return false;
+              }
+              api.sendSMS({
+                mobile : this.form.phone,
+                smsType : 1
+              }).then((data)=>{
+                  console.log(data);
+              }).catch((err)=>{
+
+              });
+              this.countdown();
+          },
+          //倒计时60秒
+          countdown(){
+            this.showGetCode = false;
+            setTimeout(()=>{
+              this.count--;
+              if(this.count <= 0){
+                this.showGetCode = true;
+                this.count = 59;
+                return;
+              }else{
+                this.countdown();
+              }
+            },1000);
+          },
+          //图形验证码是否为空
+          checkVerifyCode(){
+            if( this.form.verifyCode.trim() == '' ){
+              this.toast('校验码不能为空！');
+              return false;
+            }
+            return true;
+          },
+          toast( text ){
+            this.$vux.toast.show({
+              text : text,
+              position : 'middle',
+              type : 'text',
+              time : 1000,
+              width : '5rem'
+            });
+          },
+          checkPhone(){
+            if( this.form.phone.trim()  == '' ){
+              this.toast('手机号不能为空！');
+              return false;
+            }
+            if( !re.phone.test( this.form.phone) ){
+              this.toast('请输入正确的手机号！');
+              return false;
+            }
+            return true;
+          },
           formSubmit(){
-              console.log(11);
+            if( !(this.checkPhone() && this.checkVerifyCode()) ){
+              return false;
+            }
+            if( this.form.smsCode.trim() == '' ){
+              this.toast('短信验证码不能为空！');
+              return false;
+            }
+            if( this.form.password.trim() == '' ){
+              this.toast('密码不能为空！');
+              return false;
+            }
+            if( this.form.password.trim() == '' ){
+              this.toast('密码不能为空！');
+              return false;
+            }
+            if( !re.password.test( this.form.password ) ){
+                this.toast('密码格式错误！');
+                return false;
+            }
+            api.customerRegister({
+              mobile : this.form.phone,
+              patchca : this.form.verifyCode,
+              mobileCode : this.form.smsCode,
+              password : this.form.password,
+              invitationCode : this.form.inviteCode
+            }).then((data)=>{
+
+            }).catch(()=>{})
           }
       },
       mounted : function(){
+
 //        this.$vux.alert.show({
 //          title : false,
 //          content : '<div>12312312</div>',
@@ -252,6 +367,10 @@
             color:$white;
             font-size:px2rem(28);
 
+          }
+          .btn-getcode.gray{
+            background: $color_d9d9d9;
+            color:$color_999999;
           }
           .input-wrap{
               width: px2rem(322);

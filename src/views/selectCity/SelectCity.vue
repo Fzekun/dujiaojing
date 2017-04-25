@@ -4,12 +4,12 @@
             <div class="search-box flex">
               <label class="search-icon" for=""></label>
               <form class="flex_item" id="myform" action="" onsubmit="return false;">
-                <input type="search" autocomplete="off" @search="search" placeholder="输入城市名称或拼音" class="search-input">
+                <input type="search" autocomplete="off" @search="searchCity" placeholder="输入城市名称或拼音" class="search-input">
               </form>
             </div>
         </header>
         <div class="current-city">
-            <p>当前城市：<span class="blue_color">北京</span></p>
+            <p>当前城市：<span class="blue_color">{{cityName}}</span></p>
         </div>
         <div class="line"></div>
         <div class="city-box">
@@ -27,9 +27,9 @@
                   <p class="stayCity-text">待开通城市</p>
                 </div>
                 <ul class="letter_city-box">
-                    <li class="en" v-for="(item,index) in letterCity">
-                        <h3 href="">{{ item.letter }}</h3>
-                        <p v-for="city in item.citys">{{ city.name }}</p>
+                    <li class="en" v-for="( letter,key ) in letterCity">
+                        <h3 href="">{{ key }}</h3>
+                        <p v-for="city in letter">{{ city.cityName }}</p>
                     </li>
                 </ul>
             </div>
@@ -45,148 +45,15 @@
 </template>
 <script>
   import $ from 'n-zepto'
+  import api from '../../api/api'
   export default {
       data(){
           return {
+             cityName : '正在定位...',
              showChoose : false,
              chooseText : '',
-             letter : [
-                'A','B','C','D','E','F','G','H','I',
-                'J','K','L','M','N','O','P','Q','R',
-                'S','T','U','V','W','X','Y','Z'
-             ],
-             letterCity :  [
-                 {
-                   letter : 'A',
-                   citys : [
-                     {
-                       name : '商丘'
-                     },
-                     {
-                       name : '商丘'
-                     },
-                     {
-                       name : '商丘'
-                     },
-                     {
-                       name : '商丘'
-                     },
-                     {
-                       name : '商丘'
-                     },
-                     {
-                       name : '商丘'
-                     },
-                     {
-                       name : '商丘'
-                     },
-                     {
-                       name : '商丘'
-                     },
-                     {
-                       name : '商丘'
-                     }
-                   ]
-                 },
-                 {
-                   letter : 'B',
-                   citys : [
-                     {
-                       name : '商丘'
-                     },
-                     {
-                       name : '商丘'
-                     },
-                     {
-                       name : '商丘'
-                     },
-                     {
-                       name : '商丘'
-                     },
-                     {
-                       name : '商丘'
-                     },
-                     {
-                       name : '商丘'
-                     },
-                     {
-                       name : '商丘'
-                     },
-                     {
-                       name : '商丘'
-                     },
-                     {
-                       name : '商丘'
-                     }
-                   ]
-                 },
-                 {
-                   letter : 'C',
-                   citys : [
-                     {
-                       name : '商丘'
-                     },
-                     {
-                       name : '商丘'
-                     },
-                     {
-                       name : '商丘'
-                     },
-                     {
-                       name : '商丘'
-                     },
-                     {
-                       name : '商丘'
-                     },
-                     {
-                       name : '商丘'
-                     },
-                     {
-                       name : '商丘'
-                     },
-                     {
-                       name : '商丘'
-                     },
-                     {
-                       name : '商丘'
-                     }
-                   ]
-                 },
-                 {
-                   letter : 'D',
-                   citys : [
-                     {
-                       name : '商丘'
-                     },
-                     {
-                       name : '商丘'
-                     },
-                     {
-                       name : '商丘'
-                     },
-                     {
-                       name : '商丘'
-                     },
-                     {
-                       name : '商丘'
-                     },
-                     {
-                       name : '商丘'
-                     },
-                     {
-                       name : '商丘'
-                     },
-                     {
-                       name : '商丘'
-                     },
-                     {
-                       name : '商丘'
-                     }
-                   ]
-                 },
-             ],
-
-
+             letter : [],
+             letterCity : [],
               openedCityData :  [
                 {
                     city : '邯郸',
@@ -215,11 +82,23 @@
               ]
           }
       },
+      beforeMount(){
+        this.getLocation();
+        this.queryAllCityList();
+      },
       mounted : function(){
-          this.selectCity();
+        this.selectCity();
       },
       methods : {
-          search(){
+        queryAllCityList(){
+            api.queryAllCityList().then((data)=>{
+                this.letterCity = data;
+                this.letter = Object.keys(data);
+            }).catch((err)=>{
+
+            });
+        },
+          searchCity(){
 
           },
           selectCity(){
@@ -272,6 +151,30 @@
                   $('#letter').off('touchend', touchend);
                   e.preventDefault();
                 }
+          },
+          //获取用户地理位置
+          getLocation(){
+            var geolocation = new qq.maps.Geolocation("IIRBZ-NS2C3-GYS3G-32KUG-JMHEV-FXBVP", "myapp"),
+                options = {timeout: 5000};
+                geolocation.getLocation((position)=>{
+                  if( position.lat ){
+                    api.getCityName({
+                      data : {
+                        location : position.lat + ',' + position.lng
+                      }
+                    }).then((data)=>{
+                        this.cityName = data.regionMap.cityName;
+                    }).catch((err)=>{console.log(err);});
+                    geolocation.clearWatch();
+                  }
+                }, (err)=>{
+                  this.$vux.toast.show({
+                    text : '自动获取城市失败，请手动选择城市',
+                    position : 'middle',
+                    type : 'text',
+                    width:'7rem'
+                  });
+                }, options)
           }
       },
       components : {

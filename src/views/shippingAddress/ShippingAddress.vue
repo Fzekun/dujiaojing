@@ -1,22 +1,29 @@
 <template>
   <div>
-    <div class="receiving_info-box" v-for="item in data">
-      <div class="address-box">
-        <div class="wrap">
-          <h3>
-            <span class="float_left bold">张亮</span>&nbsp;
-            <span class="float bold">13718163294</span>
-          </h3>
-          <p></p>
-          <p class="gray_color">北京市朝阳区西单北大街号西单图书大厦单北大
-            街66号西单图书大厦</p>
-          <a href="javascript:;" class="icon-edit"></a>
-          <a href="javascript:;" class="icon-dustbin"></a>
-          <p v-if="item.check == false" class="check">设为默认</p>
-          <p v-else class="check on">设为默认</p>
+    <div class="address-box">
+      <div class="receiving_info-box" v-for="item in data">
+        <div class="address-box">
+          <div class="wrap">
+            <h3>
+              <span class="float_left bold">张亮</span>&nbsp;
+              <span class="float bold">13718163294</span>
+            </h3>
+            <p></p>
+            <p class="gray_color">北京市朝阳区西单北大街号西单图书大厦单北大
+              街66号西单图书大厦</p>
+            <a href="javascript:;" class="icon-edit"></a>
+            <a href="javascript:;" class="icon-dustbin"></a>
+            <p v-if="item.check == false" class="check">设为默认</p>
+            <p v-else class="check on">设为默认</p>
+          </div>
         </div>
       </div>
     </div>
+
+    <div class="btn-wrap">
+      <a href="" class="btn-add">+ 新增收货地址</a>
+    </div>
+
   </div>
 </template>
 <script>
@@ -111,5 +118,30 @@
   .check.on{
     background: url("../../assets/images/icon/icon-check_on.png") no-repeat left center;
     background-size: px2rem(36) auto;
+  }
+  .address-box{
+      @extend .absolute;
+      top:0;
+      left:0;
+      width: 100%;
+      bottom:px2rem(140);
+  }
+  .btn-wrap{
+      @extend .absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      box-sizing: border-box;
+      padding:0 px2rem(30) px2rem(30) px2rem(30);
+  }
+  .btn-add{
+    @extend .block;
+    border-radius: px2rem(6);
+    background: $color_0086d1;
+    @extend .text_center;
+    color:$white;
+    font-size:px2rem(32);
+    line-height: px2rem(80);
+    height:px2rem(80);
   }
 </style>

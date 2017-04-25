@@ -92,6 +92,7 @@ export default {
         height:px2rem(107);
         border-top:1px solid $color_d9d9d9;
         background:$color_f9f9f9;
+        z-index: 50;
         a.active{
             color:$color_0086d1;
             .home{

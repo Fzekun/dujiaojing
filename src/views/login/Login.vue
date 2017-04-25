@@ -8,12 +8,17 @@
     </div>
 </template>
 <script>
+//  var store = require("../../assets/js/lib/store.js").store;
+  //var store = require('store.js');
+
   import Vue from 'vue';
   import Phone from '../../components/login/Phone.vue'
   import Password from '../../components/login/Password.vue'
   export default {
       data(){
           return {
+              mask : true,
+              show : true,
               navIndex : 0,
               currentView : 'phone',
               navs : [
@@ -115,7 +120,10 @@
       @extend .text_center;
       color:$white;
       font-size:px2rem(28);
-
+    }
+    .btn-getcode.gray{
+        background:$color_d9d9d9;
+        color:$color_999999;
     }
     .input-wrap{
       /*width: px2rem(322);*/

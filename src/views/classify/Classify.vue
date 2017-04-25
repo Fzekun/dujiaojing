@@ -71,18 +71,27 @@
             <p>最多购买{{ restriction }}件</p>
         </div>
     </toast>
+    <alert :show-title="false" v-model="show" button-text="联系客服">
+        <div class="audit-box">
+          <i class="close"></i>
+          <i class="icon-audit"></i>
+          <h3 class="red_color">您的账号正在审核中…</h3>
+          <p class="alert-text">快速审核可联系客服或供应商获取邀请码！</p>
+        </div>
+    </alert>
     <common-footer footerIndex="1"></common-footer>
   </div>
 </template>
 
 <script>
 import CommonFooter from '../../components/Footer.vue'
-import { ViewBox,Toast } from 'vux'
-import AddNumber from '../../components/classify/AddNumber.vue'
+import { ViewBox,Toast, Alert } from 'vux'
+import AddNumber from '../../components/pubilc/AddNumber.vue'
 import {mapGetters} from 'vuex'
 export default {
     data () {
         return {
+            show : true,
            orderTotal : 0,
            datas : [
               {
@@ -121,7 +130,8 @@ export default {
         CommonFooter,
         ViewBox,
         AddNumber,
-        Toast
+        Toast,
+        Alert
     },
     methods : {
       addTotal(){
@@ -144,6 +154,35 @@ export default {
   body{
       background: $white;
   }
+.audit-box{
+    @extend .relative;
+    padding:0 0 px2rem(42) 0;
+    .icon-audit{
+        @extend .block;
+        height: px2rem(176);
+        width: 100%;
+        background: url("../../assets/images/icon/icon-audit.png") no-repeat center px2rem(49);
+        background-size: px2rem(92) auto;
+    }
+    h3{
+        font-weight: bold;
+        line-height: px2rem(60);
+        font-size: px2rem(32);
+    }
+    p{
+        line-height: px2rem(55);
+        font-size: px2rem(26);
+    }
+    .close{
+        @extend .absolute;
+        width: px2rem(25);
+        height: px2rem(25);
+        right:0;
+        top:px2rem(22);
+        background: url("../../assets/images/icon/icon-close.png") no-repeat;
+        background-size: 100% auto;
+    }
+}
 .toast-content{
    width: px2rem(360);
    height: px2rem(202);

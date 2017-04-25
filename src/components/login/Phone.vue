@@ -39,12 +39,13 @@
       <a v-show="submit" href="javascript:;" class="btn-submit">登录</a>
       <v-touch v-show="submitHighlight" tag="a" class="btn-submit on" v-on:tap="formSubmit">登录</v-touch>
       <p>
-        <a href="" class="float_right">快速注册</a>
+        <a href="./register.html" class="float_right">快速注册</a>
       </p>
     </div>
   </div>
 </template>
 <script>
+  import re from '../../assets/js/tools/regexp'
   export default {
     data(){
       return {
@@ -104,7 +105,15 @@
         this.showSmsCode = false;
       },
       formSubmit(){
-
+         if( !re.phone.test( this.form.phone) ){
+           this.$vux.toast.show({
+             text: '请输入正确手机号',
+             type : 'text',
+             position:'middle',
+             width:'4rem'
+           });
+           return;
+         }
       }
     }
   }

@@ -270,7 +270,7 @@
         margin:px2rem(16) px2rem(15) 0 px2rem(30);
         font-size: px2rem(28);
         color: $white;
-        line-height: px2rem(44);
+        line-height: px2rem(36);
         @extend .text_center;
       }
       .supplier{

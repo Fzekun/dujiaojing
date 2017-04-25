@@ -2,7 +2,7 @@
  * Created by fengzekun on 17/4/14.
  */
 import * as types from '../mutation-types'
-import cookie from '../../assets/js/cookie'
+import cookie from '../../assets/js/tools/cookie'
 const state = {
   toast : false,
   restriction : 0,

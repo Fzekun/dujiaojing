@@ -6,6 +6,9 @@ import Vue from 'vue'
 import PurchaseOrder from './PurchaseOrder.vue'
 var VueTouch = require('vue-touch')
 Vue.use(VueTouch, {name: 'v-touch'})
+import { Loadmore } from 'mint-ui';
+Vue.component(Loadmore.name, Loadmore);
+
 new Vue({
   el: '#purchaseOrder',
   template: '<PurchaseOrder/>',
