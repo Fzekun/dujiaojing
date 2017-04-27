@@ -20,7 +20,6 @@
           <v-touch v-show="eyeGray" tag="i" class="icon-eye" v-on:tap="tapShowPassword"></v-touch>
           <v-touch v-show="eyeHighlight" tag="i" class="icon-eye on" v-on:tap="tapHidePassword"></v-touch>
         </div>
-
       </div>
     </div>
     <div class="submit-wrap">
@@ -34,6 +33,9 @@
   </div>
 </template>
 <script>
+  import re from '../../assets/js/tools/regexp'
+  import api from '../../../src/api/api'
+  import { mapActions } from 'vuex'
   export default {
     data(){
       return {
@@ -92,6 +94,9 @@
       }
     },
     methods :{
+      ...mapActions([
+        'showToast'
+      ]),
       clearPhone(){
         this.form.phone = '';
         this.showPhone = false;
@@ -111,7 +116,28 @@
         this.$refs.password.type = 'text';
       },
       formSubmit(){
+          if( !re.phone.test( this.form.phone) ){
+            this.showToast({ text : '请输入正确的手机号！'})
+            return false;
+          }
+         if( !re.password.test( this.form.password ) ){
+            //this.toast('');
+            this.showToast({ text : '密码只能6-20位数字字母组合！'})
+            return false;
+         }
+        api.loginByPassword({
+          data : {
+            mobile : this.form.phone,
+            password : md5(this.form.password)
+          }
+        }).then((data)=>{
+          if( data.resultCode == 200 ){
 
+          }else{
+            this.showToast({ text : data.resultMsg})
+            //this.toast();
+          }
+        }).catch(()=>{})
       }
     }
   }

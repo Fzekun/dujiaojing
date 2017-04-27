@@ -18,7 +18,7 @@ axios.interceptors.response.use((res) =>{
   // }
   //console.log(res);
   //alert(res);
-  return res.data;
+  return res;
 }, (error) => {
   Vue.$vux.toast.show({
       text : '请求超时',
@@ -74,7 +74,7 @@ export default{
     return  post('/patchca.png', params);
   },
   /*短信验证码*/
-  sendSMS( params ){
+  sendSMS(params){
     return  post('/register/sendSMS', params);
   },
   /*注册和登录时对手机号进行是否存在的校验*/

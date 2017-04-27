@@ -29,7 +29,7 @@
           <v-touch v-show="showSmsCode" tag="span" class="icon-clear" v-on:tap="clearSMScode"></v-touch>
         </div>
         <div>
-          <a href="javascript:;" v-if="countdown" class="btn-getcode">获取验证码</a>
+          <v-touch href="javascript:;" v-if="showGetCode" v-on:tap="sendSMS" class="btn-getcode">获取验证码</v-touch>
           <a href="javascript:;" v-else class="btn-getcode gray">获取验证码</a>
         </div>
 
@@ -46,6 +46,8 @@
 </template>
 <script>
   import re from '../../assets/js/tools/regexp'
+  import api from '../../../src/api/api'
+  import { mapActions } from 'vuex'
   export default {
     data(){
       return {
@@ -54,7 +56,8 @@
           verifyCode : '',
           smsCode : ''
         },
-        countdown : true,
+        count : 60,
+        showGetCode : true,
         submit : true,
         submitHighlight : false,
         showPhone : false,
@@ -92,9 +95,31 @@
       }
     },
     methods :{
+      ...mapActions([
+        'showToast'
+      ]),
       clearPhone(){
           this.form.phone = '';
           this.showPhone = false;
+      },
+      sendSMS(){
+        if( !(this.checkPhone() && this.checkVerifyCode()) ){
+          return false;
+        }
+        api.sendSMS({
+          data : {
+            mobile : this.form.phone,
+            smsType : 2
+          }
+        }).then((data)=>{
+          if(data.resultCode == 200){
+            this.countdown();
+          }else{
+            this.toast(data.resultMsg);
+          }
+        }).catch((err)=>{
+          console.log(err);
+        });
       },
       clearVerifyCode(){
           this.form.verifyCode = '';
@@ -104,16 +129,42 @@
         this.form.smsCode = '';
         this.showSmsCode = false;
       },
+      //图形验证码是否为空
+      checkVerifyCode(){
+        if( this.form.verifyCode.trim() == '' ){
+          this.toast('校验码不能为空！');
+          return false;
+        }
+        return true;
+      },
+      checkPhone(){
+        if( this.form.phone.trim()  == '' ){
+          this.showToast({ text : '手机号不能为空！'});
+          return false;
+        }
+        if( !re.phone.test( this.form.phone) ){
+          this.showToast({ text : '请输入正确的手机号！'});
+          return false;
+        }
+        return true;
+      },
       formSubmit(){
-         if( !re.phone.test( this.form.phone) ){
-           this.$vux.toast.show({
-             text: '请输入正确手机号',
-             type : 'text',
-             position:'middle',
-             width:'4rem'
-           });
-           return;
-         }
+        if( !this.checkPhone() ){
+          return false;
+        }
+        api.loginByMobile({
+          data : {
+            mobile : this.form.phone,
+            smsCode : this.form.smsCode,
+            patchca : this.form.verifyCode
+          }
+        }).then((data)=>{
+          if( data.resultCode == 200 ){
+
+          }else{
+            this.showToast({ text : data.resultMsg});
+          }
+        }).catch((err)=>{})
       }
     }
   }

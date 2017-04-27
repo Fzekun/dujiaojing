@@ -98,16 +98,15 @@
 
 <script>
   import api from '../../api/api'
+
   import re from '../../assets/js/tools/regexp'
-//  import _ from 'underscore'
-//  _.str = require('underscore.string');
-  import { Alert } from 'vux'
+  import { Alert, md5 } from 'vux'
   export default {
       data(){
           return {
               reminder : true,
               showGetCode : true,
-              count : 59,
+              count : 60,
               imgSrc : api.url + '/patchca.png',
               show : false,
               submitGray : true,
@@ -212,20 +211,24 @@
             this.eyeHighlight = true;
             this.$refs.password.type = 'text';
           },
-
           sendSMS(){
               if( !(this.checkPhone() && this.checkVerifyCode()) ){
                   return false;
               }
               api.sendSMS({
-                mobile : this.form.phone,
-                smsType : 1
+                data : {
+                  mobile : this.form.phone,
+                  smsType : 1
+                }
               }).then((data)=>{
-                  console.log(data);
+                  if(data.resultCode == 200){
+                    this.countdown();
+                  }else{
+                    this.toast(data.resultMsg);
+                  }
               }).catch((err)=>{
-
+                console.log(err);
               });
-              this.countdown();
           },
           //倒计时60秒
           countdown(){
@@ -255,7 +258,7 @@
               position : 'middle',
               type : 'text',
               time : 1000,
-              width : '5rem'
+              width : '7rem'
             });
           },
           checkPhone(){
@@ -270,33 +273,27 @@
             return true;
           },
           formSubmit(){
-            if( !(this.checkPhone() && this.checkVerifyCode()) ){
-              return false;
-            }
-            if( this.form.smsCode.trim() == '' ){
-              this.toast('短信验证码不能为空！');
-              return false;
-            }
-            if( this.form.password.trim() == '' ){
-              this.toast('密码不能为空！');
-              return false;
-            }
-            if( this.form.password.trim() == '' ){
-              this.toast('密码不能为空！');
+            if( !this.checkPhone() ){
               return false;
             }
             if( !re.password.test( this.form.password ) ){
-                this.toast('密码格式错误！');
+                this.toast('密码只能6-20位数字字母组合！');
                 return false;
             }
             api.customerRegister({
-              mobile : this.form.phone,
-              patchca : this.form.verifyCode,
-              mobileCode : this.form.smsCode,
-              password : this.form.password,
-              invitationCode : this.form.inviteCode
+              data : {
+                mobile : this.form.phone,
+                patchca : this.form.verifyCode,
+                mobileCode : this.form.smsCode,
+                password : md5(this.form.password),
+                invitationCode : this.form.inviteCode
+              }
             }).then((data)=>{
+                if( data.resultCode == 200 ){
 
+                }else{
+                    this.toast(data.resultMsg);
+                }
             }).catch(()=>{})
           }
       },

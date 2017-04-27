@@ -14,3 +14,6 @@ export const HIDE_TOAST = 'HIDE_TOAST';
 export const GET_RESTRICTION = 'GET_RESTRICTION';
 export const COMPUTE_ORDER_TOTAL = 'COMPUTE_ORDER_TOTAL';
 
+
+//登录
+export const TOAST= 'TOAST';

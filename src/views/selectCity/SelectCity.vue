@@ -92,8 +92,8 @@
       methods : {
         queryAllCityList(){
             api.queryAllCityList().then((data)=>{
-                this.letterCity = data;
-                this.letter = Object.keys(data);
+                this.letterCity = data.data;
+                this.letter = Object.keys(data.data);
             }).catch((err)=>{
 
             });
@@ -163,7 +163,7 @@
                         location : position.lat + ',' + position.lng
                       }
                     }).then((data)=>{
-                        this.cityName = data.regionMap.cityName;
+                        this.cityName = data.data.regionMap.cityName;
                     }).catch((err)=>{console.log(err);});
                     geolocation.clearWatch();
                   }
